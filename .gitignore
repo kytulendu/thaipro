@@ -1,0 +1,7 @@
+build/
+dist/
+*.OBJ
+*.LST
+*.MAP
+*.ERR
+*.png

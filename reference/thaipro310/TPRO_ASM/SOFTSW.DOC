@@ -1,0 +1,107 @@
+Soft switch and Utility service of ThaiPro 3.0 by INT 60h
+  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³    Set Functions                 ³       Input        ³      Output      ³
+  ÃÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+  ³AH³                               ³         AL         ³       NULL       ³
+  ³ 0³ Media code                    ³        0Ä4         ³       NULL       ³
+  ³ 1³ Screen mode                   ³        0-5         ³       NULL       ³
+  ³ 2³ Status                        ³        0-2         ³       NULL       ³
+  ³ 3³ Typing check                  ³        0-1         ³       NULL       ³
+  ³ 4³ Layout key                    ³        0-1         ³       NULL       ³
+  ³ 5³ Language key                  ³        0-4         ³       NULL       ³
+  ³ 6³ Printer code                  ³        0-1         ³       NULL       ³
+  ³ 7³ Printer level                 ³        0-1         ³       NULL       ³
+  ³ 8³ Port Number                   ³        0-2         ³    AL = Error    ³
+  ³ 9³ Line space                    ³        1-99        ³       NULL       ³
+  ³ A³ Printer hard blank code       ³       0-255        ³       NULL       ³
+  ³ B³ Printer hard blank langth     ³        1-9         ³       NULL       ³
+  ³ C³ Screen hard blank code        ³       0-255        ³       NULL       ³
+  ³ D³ Screen hard blank langth      ³        1-9         ³       NULL       ³
+  ³ E³ Refresh mode speed            ³        1-4         ³       NULL       ³
+  ³ F³ Inner space up                ³        1-99        ³       NULL       ³
+  ³10³ Inner space down              ³        1-99        ³       NULL       ³
+  ³11³ Printer setup                 ³        0-8         ³    AL = Error    ³
+  ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³    Get Functions                 ³       Input        ³      Output      ³
+  ÃÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+  ³AH³                               ³                    ³     ÄÄ AL ÄÄ     ³
+  ³40³ Media code                    ³        NULL        ³       0-4        ³
+  ³41³ Screen mode                   ³        NULL        ³       0-5        ³
+  ³42³ Status key E/T                ³        NULL        ³       0-2        ³
+  ³43³ Typing check                  ³        NULL        ³       0-1        ³
+  ³44³ Layout key                    ³        NULL        ³       0-1        ³
+  ³45³ Language key                  ³        NULL        ³       0-4        ³
+  ³46³ Printer code                  ³        NULL        ³       0-1        ³
+  ³47³ Printer level                 ³        NULL        ³       0-1        ³
+  ³48³ Port Number                   ³        NULL        ³       0-2        ³
+  ³49³ Line spacing                  ³        NULL        ³       1-99       ³
+  ³4A³ Printer hard blank code       ³        NULL        ³      0-255       ³
+  ³4B³ Printer hard blank langth     ³        NULL        ³       1-9        ³
+  ³4C³ Screen hard blank code        ³        NULL        ³      0-255       ³
+  ³4D³ Screen hard blank langth      ³        NULL        ³       1-9        ³
+  ³4E³ Refresh speed                 ³        NULL        ³       1-4        ³
+  ³4F³ Inner space up                ³        NULL        ³       1-99       ³
+  ³50³ Inner space down              ³        NULL        ³       1-99       ³
+  ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+  ³    Utility Function              ³       Input        ³      Output      ³
+  ÃÄÄÂÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÅÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+  ³AH³                               ³                    ³                  ³
+  ³80³ Lock menu                     ³        NULL        ³       NULL       ³
+  ³81³ Unlock menu and all choice    ³        NULL        ³       NULL       ³
+  ³82³ Set cursor X,Y 25 Bios        ³         DX         ³       NULL       ³
+  ³83³ Ascii level                   ³         AL         ³      AL 0-2      ³
+  ³84³ AnyToTisCode                  ³         AL         ³        AL        ³
+  ³85³ Config data area              ³        NULL        ³      ES:BX       ³
+  ³86³ Lock POP-UP                   ³        NULL        ³       NULL       ³
+  ³87³ Unlock POP-UP                 ³        NULL        ³       NULL       ³
+  ³88³ TisToPrtCode                  ³         AL         ³        AL        ³
+  ³89³ TisToAnyCode                  ³         AL         ³        AL        ³
+  ³8A³ GetStatusKey                  ³        NULL        ³AL = 0 eng, 1 thai³
+  ³8B³ SetKeyLayout Thai/Eng         ³        0-1         ³       NULL       ³
+  ³8C³ Get EnglishAsciiLowerCase     ³ like int16 func 0  ³        AX        ³
+  ³8D³ Test 80 Colunm for FOX        ³         DL         ³     Flag, DL     ³
+  ³8E³ Lock/UnlockChoice             ³       NOTE 3       ³       NULL       ³
+  ³8F³ Lock/UnlockSubMenu            ³       NOTE 4       ³       NULL       ³
+  ³90³ Get ThaiPro version           ³        NULL        ³ AH=int,AL=float  ³
+  ³91³ Get card type                 ³        NULL        ³AL = 2 EGA, 6 VGA ³
+  ³92³ Ena/Dis Extend Head           ³0= NoHead, 1= ExtHea³       NULL       ³
+  ³93³ Ena/Dis LineSpaceAuto         ³0=Various, 1= Fixed ³       NULL       ³
+  ³94³ Ena/Dis 1 LevelTransPrtCode   ³0=NoTrans, 1=Transla³       NULL       ³
+  ³95³ Set Color&Position E/T Corner ³AL=Color DL=Position³       NULL       ³
+  ³96³ MoveVedioToMem                ³       NOTE 1       ³                  ³
+  ³97³ MoveMemToVedio                ³       NOTE 2       ³                  ³
+  ÀÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+
+     NOTE
+     1 MoveVedioToMem
+       entry:   DS    -segment of video buffer
+                ES:DI -memory buffer
+                DH,DL -ro and column of upper left corner of window
+                CH    -width of window in column
+                CL    -numver of lines in window
+
+     2 MoveMemToVedio
+       entry    DS:SI -memory buffer
+                ES    -video segment
+                DH,DL -row and column of upper left couner of window
+                CH    -width of window in column
+                CL    -number of lines in window
+
+     3 Lock/UnlockChoice
+       bit 7    = 0 UnLock
+                = 1 Lock
+       bit 0-6  = 0-46 choice number
+
+     4 Lock/UnlockSubMenu
+       bit 7    = 0 UnLock
+                = 1 Lock
+       bit 0-6  = 0-18 sub menu number
+
+
+
+
+

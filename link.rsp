@@ -1,0 +1,4 @@
+format dos
+file build\INT8.OBJ, build\INT9.OBJ, build\INT10.OBJ, build\INT17.OBJ, build\INT60.OBJ, build\GAP.OBJ, build\MENU.OBJ, build\INSTALL.OBJ
+name build\THAIPRO.EXE
+option map=build\THAIPRO.MAP
