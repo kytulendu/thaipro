@@ -14,6 +14,18 @@ JWlink 2.0 bundled in `tools\`, Windows). Output: `dist\THAIPRO.EXE`
 (51,314 bytes vs 52,146 for the shipped binary; the logo text differs).
 Details below, in Thai.
 
+**สรุป (ไทย)**
+
+ซอร์สที่ build ใหม่ได้ของ *Powersoft Thai Professional EGA/VGA 3.10* (ปี 1991)
+ไดรเวอร์ภาษาไทยบน DOS แบบ TSR สำหรับแป้นพิมพ์ จอ และเครื่องพิมพ์
+ซอร์สบางส่วนที่ได้จากผู้พัฒนา (`INSTALL INT9 INT8 INT10 INT17 INT60 MENU`)
+build ไม่ผ่านในสภาพเดิม โมดูลวิดีโอ (`GAP.ASM`) ที่ขาดไปเขียนขึ้นใหม่จากการ
+disassemble `THAIPRO.EXE` ปี 1991 และแก้ไฟล์เดิมเท่าที่จำเป็น (ฟอนต์ ตาราง
+ค่าเริ่มต้น และบั๊ก 2 จุด) จนไดรเวอร์ที่ build ใหม่ทำงานเหมือนตัวจริงใน DOSBox-X
+(ฟอนต์ไทย จอเลื่อน/ลบ cursor เมนู) build ด้วย `build.bat` (JWasm 2.20 + JWlink 2.0
+อยู่ใน `tools\` ใช้บน Windows) ได้ `dist\THAIPRO.EXE` ขนาด 51,314 ไบต์
+(ตัวจริง 52,146 ไบต์ ต่างกันที่ข้อความโลโก้) รายละเอียดอยู่ด้านล่าง
+
 ---
 
 ## โครงสร้าง
