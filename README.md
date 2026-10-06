@@ -31,7 +31,6 @@ src\
   INT60.ASM        hotkey / เมนูป๊อปอัป
   MENU.ASM         เมนู + ตารางค่าตั้ง
   GAP.ASM          โมดูลวิดีโอที่เขียนขึ้นใหม่ (ต้นฉบับขาดหายไป)
-reference\         ชุดแจกจ่ายเดิม (THAIPRO.EXE ปี 1991, เอกสาร, ยูทิลิตี้)
 tools\             JWasm.exe, JWlink.exe และ License.txt (ใบอนุญาต Sybase Open Watcom)
 ```
 
