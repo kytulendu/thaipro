@@ -186,7 +186,7 @@ Th_process          PROC    NEAR
 		push    dx
 		cmp     di,es:Tail        ;test shifting old-new position
 		je      Th_PQuit
-		mov     bx,WORD PTR Kb_layout
+		mov     bx,WORD PTR KB_layout
 		mov     dx,es:Kbd_stat
 		and     dx,Shift_on       ;
 		jz      Lim_key           ; shift off
@@ -283,7 +283,7 @@ next_chk:       cmp     cl,1            ;test flag on
 		jne     Back_step
 Replace:        cmp     ch,128
 		jb      unopen
-		mov     bx,WORD PTR Kbtran     ;get address backward 128
+		mov     bx,WORD PTR KbTran     ;get address backward 128
 		mov     al,ch           ;transfer to
 		mov     dl,ch           ;cl internal code
 		xlat                           ;open table
@@ -328,7 +328,7 @@ yes:            cmp     dl,0d1h
 		cmp     bx,OFFSET Buffer_end
 		jl      no_wrap4
 		mov     bx,OFFSET Buffer
-no_wrap4:       cmp     bx,es:head
+no_wrap4:       cmp     bx,es:Head
 		je      buffer_full
 
 		mov     dx,bx
@@ -337,11 +337,11 @@ no_wrap4:       cmp     bx,es:head
 		cmp     dx,OFFSET Buffer_end
 		jl      no_wrap3
 		mov     dx,OFFSET Buffer
-no_wrap3:       cmp     dx,es:head
+no_wrap3:       cmp     dx,es:Head
 		je      buffer_full
 		mov     al,0e9h
 		push    bx                   ;save buffer pointer
-		mov     bx,WORD PTR Kbtran     ;get address backward 128
+		mov     bx,WORD PTR KbTran     ;get address backward 128
 		xlat
 		pop     bx                   ;restore buffer pointer
 		mov     es:[bx],ax

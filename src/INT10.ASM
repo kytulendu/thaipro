@@ -4,7 +4,7 @@ CSEG            SEGMENT PARA PUBLIC 'CODE'
 		ASSUME  CS:CSEG, DS:CSEG
 
 		EXTRN   CurPoint:NEAR, NewVisit:NEAR
-		EXTRN   SetMode:NEAR
+		EXTRN   Setmode:NEAR
 		EXTRN   RefrOnOff:NEAR, CursorLevel:NEAR
 		EXTRN   EnglishMode:NEAR
 		EXTRN   CurrMode:NEAR
@@ -289,7 +289,7 @@ INCODE8::        mov   bx,0B400h       ;b400 ,bc00   <<<<
 		cmp   cl,0D8h
 		je    SHORT  upper1
 		jmp   SHORT special           ;any set special
-Special:        inc   dl              ;DL=2 Tell Way0=F2 ,Way1= wrong way
+special:        inc   dl              ;DL=2 Tell Way0=F2 ,Way1= wrong way
 upper0:         inc   dl              ;DL=1 tell way0=F1 ,way1=Wrong
 upper1:         cmp   dh,1            ;compare flag by 1
 		jb    SHORT zero

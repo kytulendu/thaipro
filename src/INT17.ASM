@@ -182,7 +182,7 @@ Scan3:          add     bp,2                    ;jmp table size
 SendBack:       mov     si,OFFSET EscStr_buf
 		add     si,bx                   ;adjust start address for send back
 		cld                             ;
-		mov     cx,Tablesize            ;cx=5
+		mov     cx,TableSize            ;cx=5
 		sub     cx,bx                   ;negative counter
 SendBack1:      push    cx
 		lodsb                           ;mov string to AL
@@ -776,7 +776,7 @@ untransl:       cmp   al,0D1h
 mediam0:        jmp   SHORT mediam
 oneConect:      jmp   one
 
-Special:        inc   sub0Way              ;DL=2 Tell Way0=F2 ,Way1= wrong way
+special:        inc   sub0Way              ;DL=2 Tell Way0=F2 ,Way1= wrong way
 upper0:         inc   sub0Way              ;DL=1 tell way0=F1 ,way1=Wrong
 upper1:         cmp   brigdFlag,1            ;compare flag by 1
 		jb    SHORT zero
