@@ -11,7 +11,7 @@ CSEG            SEGMENT PARA PUBLIC 'CODE'
 		EXTRN   NewPage:NEAR, IndexPort:NEAR
 		EXTRN   MediamTable:NEAR, DispTran:NEAR, Transtable:NEAR
 		EXTRN   KbTran:NEAR
-		EXTRN   TransCurpos:NEAR
+		EXTRN   TransCurpos:NEAR, SetCurShape:NEAR
 		EXTRN   Clscreen:NEAR, ClscreenOdd:NEAR, ClscreenOrg:NEAR
 		EXTRN   Sound:NEAR
 
@@ -217,7 +217,7 @@ Int10func1_1:   mov     dx,cx           ;copy cursor size
 		add     bx,ax                   ;sourse
 		mov     [bx+8],dx               ;save in table
 		inc     BYTE PTR NewVisit
-		call    TransCurpos
+		call    SetCurShape
 
 		jmp     VideoReturn
 Int10func1_3:   pushf

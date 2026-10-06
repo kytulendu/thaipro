@@ -14,10 +14,14 @@ CSEG            SEGMENT PARA PUBLIC 'CODE'
 		EXTRN   Code8line:BYTE                  ;MENU
 		EXTRN   Old_int10h_vector:NEAR          ;INT10 (DWORD)
 		EXTRN   EGAfont1:NEAR                   ;INSTALL (font blob)
+		EXTRN   EGAfont2:NEAR                   ;INSTALL (font blob)
+		EXTRN   EGARWfont:NEAR                   ;INSTALL (font blob)
+		EXTRN   EGAsaha:NEAR                   ;INSTALL (font blob)
+		EXTRN   EGAita:NEAR                   ;INSTALL (font blob)
 
 		PUBLIC  IndexPort, CRT_MODE, OldPage, NewPage
 		PUBLIC  CursorLevel, EnglishMode
-		PUBLIC  HardCur, TransCurpos
+		PUBLIC  HardCur, TransCurpos, SetCurShape
 		PUBLIC  Clscreen, ClscreenOdd, ClscreenOrg, Setmode
 		PUBLIC  INCODE5, INCODE6, INCODE7, INCODE52
 		PUBLIC  OffsetCode2, PROTECT_A000H
@@ -170,9 +174,9 @@ Tran_chkst:     cmp     dh,1                    ;0x3073
 Tran_low:       inc     Tran_state              ;0x307E
 		cmp     dl,1
 		je      Tran_low1
-		mov     dh,2
-		mov     cl,al
-		jmp     Tran_adv
+		mov     dh,2                    ;0x3087
+Tran_lowc:      mov     cl,al                   ;0x3089
+Tran_jadv:      jmp     Tran_adv                ;0x308B
 Tran_low1:      mov     dh,1                    ;0x308D
 		cmp     al,0D8h
 		jb      Tran_lowc
@@ -184,15 +188,13 @@ Tran_mid:       mov     dh,2                    ;0x3099
 		jne     Tran_next
 		inc     Tran_state
 		cmp     cl,0D7h
-		ja      Tran_lowc
-		jmp     Tran_adv
-Tran_lowc:      mov     dh,2                    ;0x3089
-		mov     cl,al
+		ja      Tran_jadv
 		jmp     Tran_adv
 Tran_plain:     xor     dh,dh                   ;0x30AC
-Tran_next:      cmp     al,020h                 ;0x30AE
-		je      Tran_blank
+Tran_next:
 OffsetCode2     LABEL   NEAR
+		cmp     al,020h                 ;0x30AE
+		je      Tran_blank
 		mov     BYTE PTR Tran_space,0   ;0x30B2
 Tran_zinc:      inc     di                      ;0x30B7
 		inc     di
@@ -222,6 +224,7 @@ Tran_done:      mov     ax,cs                   ;0x30E2
 TransCurpos     ENDP
 
 ; ---- hardware cursor shape helper (ref 0x30EF-0x310F)
+SetCurShape     PROC    NEAR
 		push    bp                      ;0x30EF
 		mov     bp,sp
 		push    di
@@ -246,6 +249,7 @@ INCODE6         LABEL   NEAR                    ;0x30F9 (patch +1 -> D4)
 		pop     di
 		pop     bp
 		ret
+SetCurShape     ENDP
 
 ; ---- video variables (ref 0x3110-0x312B)
 IndexPort       DW      03B4h                   ;0x3110 6845 index port
@@ -255,16 +259,19 @@ NewPage         DW      0B400h                  ;0x3115 shadow page seg
 ModeWork        DB      7                       ;0x3117 entry+0 height
 		DW      0                       ;0x3118 entry+1 font segment
 FontW1          DW      OFFSET EGAfont1         ;0x311A entry+3 font off
-FontW2          DW      OFFSET EGAfont1+700h    ;0x311C entry+5 font off 2
+FontW2          DW      OFFSET EGAfont2         ;0x311C entry+5 font off 2
 		DB      4                       ;0x311E entry+7 font block
 CursorLevel     DW      0500h                   ;0x311F entry+8 cursor size
 		DB      6                       ;0x3121 entry+10
 		DB      2                       ;0x3122 entry+11
 		DB      020h                    ;0x3123 entry+12
 		DW      00F00h                  ;0x3124 entry+13 clear attr
-FontPtrV1       DW      OFFSET EGAfont1+1000h   ;0x3126 = EGARWfont
-FontPtrV2       DW      OFFSET EGAfont1+1800h   ;0x3128 = EGAsaha
-FontPtrV3       DW      OFFSET EGAfont1+2000h   ;0x312A = EGAita
+RWoffset        LABEL   WORD                    ;same variable (INSTALL patches it for VGA)
+FontPtrV1       DW      OFFSET EGARWfont        ;0x3126 = EGARWfont
+SAHAoffset      LABEL   WORD
+FontPtrV2       DW      OFFSET EGAsaha          ;0x3128 = EGAsaha
+ITAoffset       LABEL   WORD
+FontPtrV3       DW      OFFSET EGAita           ;0x312A = EGAita
 
 ; ---- EnglishMode: per-mode parameter table, 15 bytes per entry
 ;      (ref 0x312C-0x3185, 6 entries; INSTALL patches cursor size +8+15k)
@@ -276,7 +283,6 @@ EnglishMode     LABEL   BYTE
 		DB      007h,00,00, 00,00,00,00,04, 000h,005h,006h,02,020h, 000h,00Fh
 		DB      007h,00,00, 00,00,00,00,04, 000h,005h,006h,02,020h, 000h,00Fh
 
-		DB      00Fh                    ;0x3185 (table end)
 		DB      "here string"           ;0x3186 (original debug marker)
 
 ; ---- Setmode: program CRTC, load fonts, set cursor (ref 0x3191-0x32DE)
@@ -331,17 +337,17 @@ Setmode         PROC    NEAR
 		je      Setm_1
 		cmp     BYTE PTR CurrMode,2
 		jne     Setm_clr
-		mov     bp,FontPtrV1            ;0x3201
+		mov     bp,FontPtrV3            ;0x3201 (orig reads 0x312A)
 		mov     dx,0
 		mov     cx,080h
 		mov     bh,ModeWork
 		mov     bl,1
 		mov     ax,1110h
 		call    FontLoad
-Setm_1:         mov     bp,FontPtrV2            ;0x3217
+Setm_1:         mov     bp,FontPtrV1            ;0x3217 (orig reads 0x3126)
 		cmp     BYTE PTR Code8line,0
 		je      Setm_2
-		mov     bp,FontPtrV3
+		mov     bp,FontPtrV2
 Setm_2:         mov     dx,080h                 ;0x3226
 		mov     cx,080h
 		mov     bh,ModeWork
@@ -566,7 +572,7 @@ ClscreenOrg     PROC    NEAR
 		push    cx
 		push    ax
 		cld
-		mov     ax,OldPage
+		mov     ax,cs:OldPage
 		mov     es,ax
 		xor     di,di
 		mov     cx,07D0h
@@ -581,9 +587,6 @@ ClscreenOrg     ENDP
 
 ; ---- extra variables referenced by INSTALL (1992 additions)
 NewVisit        DB      0
-RWoffset        DW      0
-SAHAoffset      DW      0
-ITAoffset       DW      0
 
 CSEG            ENDS
 		END

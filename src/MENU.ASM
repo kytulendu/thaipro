@@ -530,10 +530,10 @@ PSP             DW      ?
 		DW      OFFSET Old_int6fh_offs
 		DW      OFFSET Hot_Key
 		DW      OFFSET EGAfont1
-Cur_win         DB      1
+Cur_win         DB      0
 
 DispTran          DW    OFFSET  KU_TIS -128
-TimerRun          DW      OFFSET Shearsor1
+TimerRun          DW      OFFSET L_refresh1
 ScrHardBlkCod     DB    32   ;blank
 ScrHardBlkLen      DB    2               ;change from menu
 
@@ -544,44 +544,44 @@ SpeedVAR          DB    2               ;change from menu
 PortVAR           DB    0               ;current port count from 0 1 2
 PrnfVAR           DB    0               ;current function to printer
 
-RefrOnOff       DB      1
+RefrOnOff       DB      0
 MenuRefresh     DB      ?               ;on/off refresher  Variable
 ETflag          DB      00h             ;English0 / Thai1 flag
 
 Hot_Key         DB      3Bh             ;F1 key
 Ctrl_key        DW      0004h           ;Ctrl key
 HotkeyLebel     DB      'Ctrl+F1','$','20 character'
-Lang_key        DB      3Ah             ;default CapsLock key
+Lang_key        DB      29h             ;default key ~ (as shipped 1991)
 Lang0           DB      3ah             ;caps lock
 Lang1           DB      38h             ;alt
 Lang2           DB      45h             ;num
-Lang3           DB      46h             ;scrool
+Lang3           DB      29h             ;key ~
 Ctrl_keyTemp    DW      ?               ;temperaly First key when POPLOCK
 
 KB_layout       DW      OFFSET MANEE1   ;address of layout table
 KbTran          DW      OFFSET TIS_KU -128
 
-ThaiEngStatus1  DW      OFFSET SoundSta
-ThaiEngStatus2  DW      OFFSET BlankSta
+ThaiEngStatus1  DW      OFFSET CornerET
+ThaiEngStatus2  DW      OFFSET CornerET
 
 PrinterTran          DW    OFFSET KU_TIS -128
 CodePr_convert       DW    OFFSET Tis_Ku_PR - 128        ;dynamic User set
-Spacing3        DB      1Bh,'3',11h     ;dynamic LineSpacing User set
-Spacing1        DB      1Bh,'3',23      ; 20 = 24pin, 23 = 9pin
-Spacing2        DB      1Bh,'3',23      ; 19 = 24pin, 23 = 9pin
+Spacing3        DB      1Bh,'3',14h     ;dynamic LineSpacing User set
+Spacing1        DB      1Bh,'3',20      ; 20 = 24pin, 23 = 9pin
+Spacing2        DB      1Bh,'3',20      ; 19 = 24pin, 23 = 9pin
 OneLevelSP      DB      27,51,24h,255,0    ;ESC3 set n/216 line spacing
 LockSpacing     DB      0               ;0=Unlock can replace, 1=Lock
 ExtendFlag      DB      0               ;0 non-extend, 1 extend
 PrnOneLeTrn     DB      0               ;0 by pass   , 1 translate
-Hex72           DB      72              ;60 for 24 pin
-Hex216          DB      216             ;180 for 24 pin
+Hex72           DB      60              ;60 for 24 pin
+Hex216          DB      180             ;180 for 24 pin
 
 EngSound        DW      016dh
 ThaiSound       DW      01c7h
-BarStatus       DB      55,70h,127,70h,238,70h,231,70h,55,70h
-CornerPos       DW      0136h
-VgaFontStyle    DB      0               ;0=thin, 1= bold
-EgaFontStyle    DB      0               ;0=thin, 1= bold
+BarStatus       DB      55,53h,127,53h,238,53h,231,53h,55,53h
+CornerPos       DW      0128h
+VgaFontStyle    DB      1               ;0=thin, 1= bold
+EgaFontStyle    DB      1               ;0=thin, 1= bold
 OneLevelTran    DW      OFFSET Tis_Ku_PR - 128
 SamDataPrinter  DB      0               ;0=Sam, 1= Differance
 
@@ -589,18 +589,18 @@ Original        DB      1
 Code8line       DB   0   ;RW
 Code8line1      DB  ?
 
-CurrMode1       DB  ?
+CurrMode1       DB  3
 CurMediaCode    DB  0   ;start KU
-CurStatus       DB  1   ;1 sound
+CurStatus       DB  2   ;corner
 Typ_chk         DB  1   ;00typing check /01 not check
 CurLayOut       DB  0   ;katmanee
-CurLangKey      DB  0   ;caplock
+CurLangKey      DB  3   ;key ~
 CurPrnCode      DB  0   ;Ku
 CurPrnLev       DB  1   ;3 level
 CurPort         DB  0   ;LPT0
 
-CurrMode        DB  4
-KeyMode         DB      0
+CurrMode        DB  3
+KeyMode         DB      3
 
 
 
@@ -641,19 +641,19 @@ OffsetAdd       DB      ?
 int10Table      LABEL   WORD
 fucn0           DW      OFFSET Int10func0
 fucn1           DW      OFFSET Int10func1
-fucn2           DW      OFFSET Int10func2_2       ;OldVDOReturn
-fucn3           DW      OFFSET Int10func3_2
+fucn2           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)       ;OldVDOReturn
+fucn3           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
 fucn4           DW      OFFSET OldVDOReturn
 fucn5           DW      OFFSET VideoReturn
-fucn6           DW      OFFSET Int10func6_2
-fucn7           DW      OFFSET Int10func7_2
-fucn8           DW      OFFSET Int10func8_2
-fucn9           DW      OFFSET Int10func9_2
-fucnA           DW      OFFSET Int10funcA_2
+fucn6           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
+fucn7           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
+fucn8           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
+fucn9           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
+fucnA           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)
 fucnB           DW      OFFSET OldVDOReturn
 fucnC           DW      OFFSET OldVDOReturn
 fucnD           DW      OFFSET OldVDOReturn
-fucnE           DW      OFFSET Int10funcE_2     ;Int10funcE
+fucnE           DW      OFFSET OldVDOReturn   ;initial (patched by Int10func0 for Thai modes)     ;Int10funcE
 fucnF           DW      OFFSET OldVDOReturn
 fucn10          DW      OFFSET OldVDOReturn
 fucn11          DW      OFFSET OldVDOReturn     ;VideoReturn
@@ -682,7 +682,7 @@ Win_Keyboard    DB      '  ³ Keyboard ³  '
 		DB      '³   CapsLock   ³'
 		DB      '³   Alt        ³'
 		DB      '³   NumLock    ³'
-		DB      '³   ScrollLock ³'
+		DB      '³   Key ~      ³'
 		DB      '³   Disable    ³'
 		DB      'ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ'
 
