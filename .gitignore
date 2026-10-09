@@ -4,3 +4,4 @@ build/
 *.MAP
 *.ERR
 *.png
+*.CRF

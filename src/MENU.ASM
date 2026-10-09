@@ -1,5 +1,6 @@
+ifndef MASM
 OPTION PROC:PRIVATE
-
+endif
 
 CSEG            SEGMENT PARA PUBLIC 'CODE'
 		ASSUME  CS:CSEG, DS:CSEG
@@ -668,7 +669,7 @@ fucn19          DW      OFFSET OldVDOReturn
 fucn1A          DW      OFFSET VideoReturn
 Mil             EQU     $-int10Table
 
-Win_Keyboard    DB      '  ³ Keyboard ³  '
+Win_keyboard    DB      '  ³ Keyboard ³  '
 		DB      'ÚÄÁÄÄÄÄÄÄÄÄÄÄÁÄ¿'
 		DB      '³Typing check  ³'
 		DB      '³   Check      ³'
@@ -1173,7 +1174,7 @@ Lay_Choid       PROC    NEAR
 		mov     WORD PTR KB_layout,OFFSET CHOID1
 		mov     BYTE PTR CurLayOut,01
 		ret
-Lay_choid       ENDP
+Lay_Choid       ENDP
 
 ;___________________________________________________________________
 ;

@@ -1,4 +1,7 @@
+ifndef MASM
 OPTION PROC:PRIVATE
+endif
+
 ; ---------------------------------------------------------------------------
 ; GAP.ASM - reconstructed "video support" module for Powersoft Thai
 ; Professional EGA/VGA 3.10.  Recovered from the reference THAIPRO.EXE
@@ -8,7 +11,7 @@ OPTION PROC:PRIVATE
 CSEG            SEGMENT PARA PUBLIC 'CODE'
 		ASSUME  CS:CSEG, DS:CSEG
 
-		EXTRN   DISPTRAN:WORD                   ;MENU
+		EXTRN   DispTran:WORD                   ;MENU
 		EXTRN   ScrHardBlkLen:BYTE              ;MENU
 		EXTRN   CurrMode:BYTE                   ;MENU
 		EXTRN   Code8line:BYTE                  ;MENU
@@ -144,7 +147,7 @@ INCODE5         LABEL   NEAR                    ;0x3038 (patch +2 -> B8)
 		mov     ax,es:[si]
 		cmp     al,080h
 		jb      Tran_plain
-		mov     bx,DISPTRAN
+		mov     bx,DispTran
 		xlatb
 		cmp     al,0D1h
 		je      Tran_up2

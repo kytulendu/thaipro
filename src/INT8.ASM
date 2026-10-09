@@ -1,4 +1,7 @@
+ifndef MASM
 OPTION PROC:PRIVATE
+endif
+
 CSEG            SEGMENT PARA PUBLIC 'CODE'
 		ASSUME  CS:CSEG, DS:CSEG
 
@@ -6,7 +9,7 @@ CSEG            SEGMENT PARA PUBLIC 'CODE'
 		EXTRN   HardCur:NEAR
 		EXTRN   TransCurpos:NEAR
 		EXTRN   RefrOnOff:NEAR
-		EXTRN    ShadowMem:NEAR
+		EXTRN   ShadowMem:NEAR
 		EXTRN   DispTran:NEAR
 		EXTRN   TimerRun:NEAR
 		EXTRN   ScrHardBlkLen:NEAR
@@ -141,7 +144,7 @@ L_refresh1      PROC    NEAR
 		  mov   BYTE PTR cs:ReEntrance,1 ; ** Protect Re-Entrance CDC concept
 
 		  inc   TimeRecode
-		  mov   al,BYTE PTR SpeedVar
+		  mov   al,BYTE PTR SpeedVAR
 		  cmp   TimeRecode,al
 		  jne   L_refrOUT
 		  mov   TimeRecode,0            ;clear Restart
