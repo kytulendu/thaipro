@@ -3,8 +3,8 @@
 **English summary**
 
 Rebuildable source of *Powersoft Thai Professional EGA/VGA 3.10*, a 1991 DOS
-Thai keyboard/video/printer TSR driver. The partial source received from the
-original developer (`INSTALL INT9 INT8 INT10 INT17 INT60 MENU`) did not
+Thai keyboard/video/printer TSR driver. The partial source published by the
+developer (magazine article / BBS) (`INSTALL INT9 INT8 INT10 INT17 INT60 MENU`) did not
 build; the missing video module (`GAP.ASM`) was written by disassembling the
 shipped `THAIPRO.EXE` (Nov 1991), and the received files were minimally
 corrected (fonts, tables, default settings, two bugs) until the rebuilt
@@ -18,7 +18,7 @@ Details below, in Thai.
 
 ซอร์สที่ build ใหม่ได้ของ *Powersoft Thai Professional EGA/VGA 3.10* (ปี 1991)
 ไดรเวอร์ภาษาไทยบน DOS แบบ TSR สำหรับแป้นพิมพ์ จอ และเครื่องพิมพ์
-ซอร์สบางส่วนที่ได้จากผู้พัฒนา (`INSTALL INT9 INT8 INT10 INT17 INT60 MENU`)
+ซอร์สบางส่วนที่เผยแพร่ผ่านบทความและ BBS (`INSTALL INT9 INT8 INT10 INT17 INT60 MENU`)
 build ไม่ผ่านในสภาพเดิม โมดูลวิดีโอ (`GAP.ASM`) ที่ขาดไปเขียนขึ้นใหม่จากการ
 disassemble `THAIPRO.EXE` ปี 1991 และแก้ไฟล์เดิมเท่าที่จำเป็น (ฟอนต์ ตาราง
 ค่าเริ่มต้น และบั๊ก 2 จุด) จนไดรเวอร์ที่ build ใหม่ทำงานเหมือนตัวจริงใน DOSBox-X
@@ -35,7 +35,9 @@ dist\THAIPRO.EXE   ไดรเวอร์ที่ build แล้ว (สร�
 build.bat          สั่ง build ในคำสั่งเดียว (JWasm + JWlink)
 link.rsp           คำสั่งลิงก์
 src\
-  INSTALL.ASM      ตัวติดตั้ง/โหลด TSR + ฟอนต์ทั้งหมด
+  INSTALL.ASM      ตัวติดตั้ง/โหลด TSR (include ฟอนต์จากไฟล์ F_*.INC)
+  F_EGA*.INC       ฟอนต์ EGA 5 bank (14 line × 128 ตัว = 0x700 ไบต์ต่อ bank)
+  F_VGA*.INC       ฟอนต์ VGA 5 bank (16 line × 128 ตัว = 0x800 ไบต์ต่อ bank)
   INT9.ASM         hook คีย์บอร์ด (แปลงแป้นพิมพ์ไทย)
   INT8.ASM         hook timer (refresh จอ, cursor)
   INT10.ASM        hook วิดีโอ (จอแบบ shadow page)
@@ -43,6 +45,7 @@ src\
   INT60.ASM        hotkey / เมนูป๊อปอัป
   MENU.ASM         เมนู + ตารางค่าตั้ง
   GAP.ASM          โมดูลวิดีโอที่เขียนขึ้นใหม่ (ต้นฉบับขาดหายไป)
+  M.BAT, C.BAT     build / ล้างไฟล์ด้วย MASM 5.1 + LINK (ทางเลือก ดูหัวข้อ build)
 tools\             JWasm.exe, JWlink.exe และ License.txt (ใบอนุญาต Sybase Open Watcom)
 ```
 
@@ -56,11 +59,27 @@ build.bat
 ฟอนต์ไทย 3 ระดับถูกต้อง, จอเลื่อน/ลบได้, cursor ขยับ, เมนูแสดงไทยถูกต้อง
 ต่างจากตัวเดิมที่โลโก้เท่านั้น (ชื่อผู้จัดทำในซอร์สไม่เหมือนกัน)
 
+ไฟล์ `dist\THAIPRO.EXE` มี SHA-256 `883c23c6166457c9b84ad5ceb897f73ec5c5f676e3447909dbde67a7b041007b`
+(ตรวจแล้วว่า build ซ้ำหลังรวม PR #1/#2 ได้ไฟล์เดิมทุกไบต์)
+
+### build ด้วย MASM 5.1 (ทางเลือก)
+
+ซอร์สแก้ให้ผ่าน MASM 5.1 ด้วย (ส่วน `OPTION PROC:PRIVATE` ถูกข้ามเมื่อกำหนด
+`MASM`) ใน DOS / DOSBox รัน `M.BAT` ในโฟลเดอร์ `src` ได้ `thaipro.exe`
+และ `C.BAT` ลบไฟล์ที่ build ออก (สั่ง `del *.exe` ในโฟลเดอร์ปัจจุบัน
+จึงควรรันเฉพาะในโฟลเดอร์ `src`) ผลจาก MASM กับ JWasm ไม่ตรงกันทุกไบต์
+
+### แก้ฟอนต์
+
+ฟอนต์อยู่ใน `src\F_*.INC` เขียนเป็นเลขฐานสองพร้อมรูปตัวอักษร เช่น
+`db 00000110b ; .....**.` แก้ได้ตรง ๆ แล้ว build ใหม่ (EGA 14 บรรทัดต่อตัว,
+VGA 16 บรรทัดต่อตัว) ตัวติดตั้งจะคัดลอก bank VGA ทับ `EGAfont1` เมื่อพบการ์ด VGA
+
 ## ที่มาของไฟล์
 
 | ไฟล์ | ที่มา |
 |------|-------|
-| `INSTALL`, `INT9`, `INT8`, `INT10`, `INT17`, `INT60`, `MENU` | ซอร์สบางส่วนที่ได้จากผู้พัฒนา (รุ่นหลัง/ปี 1992) แก้ไขตามรายการด้านล่างเท่านั้น |
+| `INSTALL`, `INT9`, `INT8`, `INT10`, `INT17`, `INT60`, `MENU` | ซอร์สบางส่วนที่ผู้พัฒนา (Powersoft) เผยแพร่ผ่านบทความและ BBS (รุ่นหลัง/ปี 1992) แก้ไขตามรายการด้านล่างเท่านั้น |
 | `GAP.ASM` | **เขียนใหม่** จากการ disassemble `THAIPRO.EXE` ปี 1991 (โมดูลนี้ไม่มีในซอร์สที่ได้รับ) |
 
 ## `GAP.ASM` ทำหน้าที่อะไร (โมดูลสนับสนุนวิดีโอ)
@@ -92,7 +111,7 @@ build.bat
 เพื่อให้ทำงานเหมือนตัวที่แจกจริง:
 
 3. `INSTALL.ASM`
-   * ฟอนต์: ซอร์สเหลือเพียง 266 ไบต์แรกของแต่ละ bank จึงกู้ใหม่จาก EXE เดิม:
+   * ฟอนต์ (ปัจจุบันอยู่ใน `F_*.INC`): ซอร์สเหลือเพียง 266 ไบต์แรกของแต่ละ bank จึงกู้ใหม่จาก EXE เดิม:
      EGA 5 bank ๆ ละ 0x700 ไบต์ (14 scan line × 128 ตัว) และ VGA 5 bank ๆ ละ 0x800 ไบต์
      (16 line) บนการ์ด VGA ตัวติดตั้งจะคัดลอก bank VGA ทับ `EGAfont1`
    * ขนาดที่ TSR ค้างในหน่วยความจำ: ตัวจริงใช้ `(LimitDown+15)/16 + 100h` paragraph
@@ -116,3 +135,8 @@ build.bat
 * ข้อความโลโก้ (ชื่อผู้จัดทำ) ต่างกัน
 * padding ของตาราง escape เครื่องพิมพ์ (0FFh) และค่า attribute `COLOR5` (7Ch กับ 78h) ต่างกัน
   ไม่มีผลต่อหน้าจอ
+
+## ผู้ร่วมพัฒนา
+
+* kytulendu (Khralkatorrix) — PR #1 แยกฟอนต์ออกเป็นไฟล์ `F_*.INC`;
+  PR #2 ทำให้ build ด้วย MASM 5.1 ได้ (ปรับตัวพิมพ์ของ symbol, `M.BAT`, `C.BAT`)

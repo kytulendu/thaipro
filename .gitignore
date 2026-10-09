@@ -5,3 +5,10 @@ build/
 *.ERR
 *.png
 *.CRF
+*.obj
+*.lst
+*.map
+*.err
+*.crf
+src/*.EXE
+src/*.exe
