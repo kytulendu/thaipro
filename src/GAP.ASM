@@ -1,4 +1,6 @@
+ifndef MASM
 OPTION PROC:PRIVATE
+endif
 
 ; ---------------------------------------------------------------------------
 ; GAP.ASM - reconstructed "video support" module for Powersoft Thai
